@@ -1,12 +1,12 @@
 ## 목차
-- [프로세스와 스레드, NIO 그리고 리액티브 스트림](#프로세스와-스레드,-NIO-그리고-리액티브-스트림)
-- [Async & Spring](#Async-&-Spring)
-- [Spring WebFlux](#Spring-WebFlux)
-- [비동기 어플리케이션, 어떻게 모니터링 할 것인가?](#비동기-어플리케이션,-어떻게-모니터링-할-것인가?)
-- [Reactive Spring (Spring 5 & Reactor)](#Reactive-Spring-(Spring-5-&-Reactor))
+- [프로세스와 스레드 NIO 그리고 리액티브 스트림](#프로세스와-스레드-nio-그리고-리액티브-스트림)
+- [Async & Spring](#async-spring)
+- [Spring WebFlux](#spring-webflux)
+- [비동기 어플리케이션 어떻게 모니터링 할 것인가?](#비동기-어플리케이션-어떻게-모니터링-할-것인가?)
+- [Reactive Spring (Spring 5 & Reactor)](#reactive-spring-(spring-5-reactor))
 - [이벤트 소싱 소개](#이벤트-소싱-소개)
 
-# 프로세스와 스레드, NIO 그리고 리액티브 스트림
+# 프로세스와 스레드 NIO 그리고 리액티브 스트림
 
 ### 프로세스
 - 독립적인 실행단위
@@ -143,7 +143,7 @@ Method Reference의 특징을 알아볼것.
 backpressure : 데이터의 흐름 속도 제어
 
 
-# 비동기 어플리케이션, 어떻게 모니터링 할 것인가?
+# 비동기 어플리케이션 어떻게 모니터링 할 것인가?
 
 
 현대의 모니터링 : 원인에서 기인한 결과.
