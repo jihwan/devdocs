@@ -1,9 +1,9 @@
 ## 목차
 - [프로세스와 스레드 NIO 그리고 리액티브 스트림](#프로세스와-스레드-nio-그리고-리액티브-스트림)
-- [Async & Spring](#async-)
+- [Async 와 Spring](#async-와-spring)
 - [Spring WebFlux](#spring-webflux)
 - [비동기 어플리케이션 어떻게 모니터링 할 것인가?](#비동기-어플리케이션-어떻게-모니터링-할-것인가)
-- [Reactive Spring (Spring 5 & Reactor)](#reactive-spring-(spring-5-))
+- [Reactive Spring (Spring 5 과 Reactor)](#reactive-spring-(spring-5-과-reactor))
 - [이벤트 소싱 소개](#이벤트-소싱-소개)
 
 # 프로세스와 스레드 NIO 그리고 리액티브 스트림
@@ -88,7 +88,7 @@ circuit break pattern 개념과 비슷
 
 boojongmin
 
-# Async & Spring
+# Async 와 Spring
 
 무엇과 무엇이? 어떤 시간?
 
@@ -175,7 +175,7 @@ lambda transform 이 수행 안된다..
 
 *** security context 를 살펴 보면, context  비동기 전파 insight를 얻을 수 있다!!!
 
-# Reactive Spring (Spring 5 & Reactor)
+# Reactive Spring (Spring 5 과 Reactor)
 
 
 리소스 효율 ??
