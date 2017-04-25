@@ -1,288 +1,203 @@
-## 발표자
+class: center, middle, inverse
 
-### 정상혁
+# Coloured Terminal Listings
+# in remark
 
---
-
-### KSUG 3기 일꾼단 활동
---
-
-### [네이버](http://recruit.navercorp.com/naver/job/list/developer) PaaS 소속
-
-- 협업 플랫폼 개발, 사내 공통 프레임워크 기술 지원
-
---
-
-### 네이버 기술 블로그 ( http://d2.naver.com/ ) 에 가끔 기고
+.footnote[
+  created with [remark](http://github.com/gnab/remark)
+]
 
 ---
 
-# Spring/KSUG에 대한 기억 몇가지
+# Challenge
+How do we capture ANSI coloured console output and display it in remark?
 
---
+.small[
+```terminal
+josh@brick ~ $ ls -l --color
+total 20363
+drwxrwxr-x+ 96 root admin     3264 Feb 14 13:05 <span style="color:#3333FF;font-weight:bold;">Applications</span>
+drwxrwxr-x  18 root admin      612 Aug 14  2011 <span style="color:#3333FF;font-weight:bold;">Developer</span>
+drwxrwxr-t+ 63 root admin     2142 Apr 28  2012 <span style="color:white;background-color:#3333FF;">Library</span>
+drwxr-xr-x   2 root wheel       68 Jul 10  2009 <span style="color:#3333FF;font-weight:bold;">Network</span>
+drwxr-xr-x   4 root wheel      136 Jul 30  2011 <span style="color:#3333FF;font-weight:bold;">System</span>
+drwxr-xr-x   6 root admin      204 Jun 27  2012 <span style="color:#3333FF;font-weight:bold;">Users</span>
+drwxrwxrwt+  3 root admin      102 Feb 14 18:12 <span style="color:black;background-color:lime;">Volumes</span>
+drwxr-xr-x  39 root wheel     1326 Oct 23 19:41 <span style="color:#3333FF;font-weight:bold;">bin</span>
+drwxrwxr-t   2 root admin       68 Jul 10  2009 <span style="color:white;background-color:#3333FF;">cores</span>
+dr-xr-xr-x   3 root wheel     4350 Jan 18 20:54 <span style="color:#3333FF;font-weight:bold;">dev</span>
+lrwxr-xr-x   1 root wheel       11 Sep 24  2009 <span style="color:aqua;font-weight:bold;">etc</span> -&gt; private/etc
+dr-xr-xr-x   2 root wheel        1 Jan 18 20:55 <span style="color:#3333FF;font-weight:bold;">home</span>
+-rw-r--r--   1 root wheel 20828964 Jun  8  2011 mach_kernel
+dr-xr-xr-x   2 root wheel        1 Jan 18 20:55 <span style="color:#3333FF;font-weight:bold;">net</span>
+drwxr-xr-x   4 root wheel      136 Jan 10 22:26 <span style="color:#3333FF;font-weight:bold;">opt</span>
+drwxr-xr-x   6 root wheel      204 Sep 24  2009 <span style="color:#3333FF;font-weight:bold;">private</span>
+drwxr-xr-x  70 root wheel     2380 Oct 23 19:41 <span style="color:#3333FF;font-weight:bold;">sbin</span>
+lrwxr-xr-x   1 root wheel       11 Sep 24  2009 <span style="color:aqua;font-weight:bold;">tmp</span> -&gt; private/tmp
+drwxr-xr-x  15 root wheel      510 Apr 28  2012 <span style="color:#3333FF;font-weight:bold;">usr</span>
+lrwxr-xr-x   1 root wheel       11 Sep 24  2009 <span style="color:aqua;font-weight:bold;">var</span> -&gt; private/var
+```
+]
 
-## 발표내용
-### Spring/KSUG를 돌아보면 생각나는 몇가지 이야기들
+# Solution
 
---
-
-### 코드 구경
-
---
-
-### 댓글
-
---
-
-### 코드 기여
+Use the `aha` Ansi HTML Adaptor to capture output and paste the result as code
+to be interpreted by the highlight.js engine used in remark.
 
 ---
+name: code
 
-## 코드 구경
+# The Code
 
-### Spring framework 에서 인상 깊었던 코드들
+The results produced by `aha` are translated via the highlight.js engine (using
+the [language definition](terminal.language.js)) and a small jQuery script to
+substitute the embedded style elements after the page has rendered.
 
----
+To achieve this, add the following to the end of the remark presentation:
 
-### 1. `RowMapperResultSetExtractor`
-- spring-jdbc 모듈의 클래스
-- .extractData() 메서드의 [2.0.1](http://grepcode.com/file/repo1.maven.org/maven2/org.springframework/spring/2.0.1/org/springframework/jdbc/core/RowMapperResultSetExtractor.java/) -> [2.0.2](http://grepcode.com/file/repo1.maven.org/maven2/org.springframework/spring/2.0.2/org/springframework/jdbc/core/RowMapperResultSetExtractor.java/) 의 변경
+.small[
+```html
+    ...
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript">
+      var hljs = remark.highlighter.engine;
+    </script>
+    <script src="terminal.language.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        highlightStyle: 'monokai'
+      });
+      // extract the embedded styling from ansi spans
+      $('code.terminal span.hljs-ansi').replaceWith(function(i, x) {
+        return x.replace(/&lt;(\/?(\w+).*?)&gt;/g, '<$1>')
+      });
+    </script>
+    ...
+```
+]
 
---
+The terminal language definition assumes a prompt of the form:
 
-```diff
--// Use the more efficient collection if we know how many rows to expect:
--// ArrayList in case of a known row count, LinkedList if unknown
--List results = (this.rowsExpected > 0) ? (List) new ArrayList(this.rowsExpected) : (List) new LinkedList();
-+List results = (this.rowsExpected > 0 ? new ArrayList(this.rowsExpected) : new ArrayList());
-int rowNum = 0;
-while (rs.next()) {
-	results.add(this.rowMapper.mapRow(rs, rowNum++));
-}
-return results;
+```terminal
+user@host /path/x $ 
 ```
 
---
-
-- List의 아이템 개수를 모를 때에도 LinkedList 대신 ArrayList로 변경
-	- 받아 쓰는 쪽에서 List.get(i)로 접근하는 경우가 더 많이 때문에 바꾼 것으로 추정됨.  `	1q	`
+If you would like a different prompt style, get your regex on and alter it in
+the [language definition](terminal.language.js).
 
 ---
 
+# Worked Example to Capture Coloured Command Output (e.g. `git`)
 
-### 2. AbstractCachingViewResolver
-- ConcurrentHash과 LinkedHashMap을 함께 사용하여 Thread safe한 LRU Cache 구현
-	- LinkedHashMap.removeEldestEntry를 override
-- https://github.com/spring-projects/spring-framework/commit/06c6cbb6b92
+1. Build and install [aha](https://github.com/theZiz/aha):
+.small[
+```terminal
+josh@brick ~/repos $ git clone https://github.com/theZiz/aha; cd aha
+josh@brick ~/repos/aha $ make && cp aha /usr/local/bin
+```
+]
+
+2. Capture output with `aha` (for dark background highlight.js styles such as
+   solarized_dark, use `aha -b`):
+.small[
+```terminal
+josh@brick ~/repos/aha $ git log -2 --color | aha -b -n | pbcopy
+```
+]
+To capture directly to clipboard, use:
+  - `pbcopy` for OS X
+  - `xsel --clipboard` for Linux
+  - `getclip` for Cygwin
 
 ---
 
+Paste into remark document with the [header code](#code) (see .show-source[[source](#)] for more details):
+.small[
+```no-highlight
+```terminal
+josh@brick ~/repos/aha $ git log -2
+<span style="color:olive;">commit 36b0a3af174e204c8d0a7a993ad467cd7be39bca</span>
+Author: Ziz &lt;zizsdl@googlemail.com&gt;
+Date:   Fri Aug 3 10:29:43 2012 +0200
 
-```java
-/** Fast access cache for Views, returning already cached instances without a global lock */
-private final Map<Object, View> viewAccessCache = new ConcurrentHashMap<>(DEFAULT_CACHE_LIMIT);
+    Small version changes, make clean, merging, etc.
+...
+```
+```
+]
 
-/** Map from view key to View instance, synchronized for View creation */
-@SuppressWarnings("serial")
-private final Map<Object, View> viewCreationCache =
-		new LinkedHashMap<Object, View>(DEFAULT_CACHE_LIMIT, 0.75f, true) {
-			@Override
-			protected boolean removeEldestEntry(Map.Entry<Object, View> eldest) {
-				if (size() > getCacheLimit()) {
-					viewAccessCache.remove(eldest.getKey());
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
-};
+Note: code must be in a
+[GFM](http://github.github.com/github-flavored-markdown/) fenced block with
+"terminal" as the syntax-type as above.
+
+---
+
+# The Result
+
+Putting it all together, we have the desired result:
+
+.small[
+```terminal
+josh@brick ~/repos/aha $ git log -2
+<span style="color:olive;">commit 36b0a3af174e204c8d0a7a993ad467cd7be39bca</span>
+Author: Ziz &lt;zizsdl@googlemail.com&gt;
+Date:   Fri Aug 3 10:29:43 2012 +0200
+
+    Small version changes, make clean, merging, etc.
+
+<span style="color:olive;">commit 86abaa46c786c1e5dca33ad5907b8067d0e47a20</span>
+Merge: ed4f29b d0dc6c1
+Author: Ziz &lt;zizsdl@googlemail.com&gt;
+Date:   Fri Aug 3 10:28:59 2012 +0200
+
+    Merge branch 'master' of github.com:theZiz/aha
+```
+]
+
+# Bold and Reverse
+
+Bold and reverse work nicely, too (be careful of the background colour of your
+highlight.js theme):
+
+```terminal
+josh@brick ~ $ zsh -c "print -P '%Bbold%Sreverse%b%s'"
+<span style="font-weight:bold;">bold</span><span style="color:black;background-color:white;font-weight:bold;">reverse</span><span style="color:black;background-color:white;"></span><span style="color:white;background-color:black;"></span>
 ```
 
 ---
 
-### 3. `ObjectUtils.nullSafeEqauls()` 관련 최적화
-- https://github.com/spring-projects/spring-framework/pull/1076/commits
-	- 해당 메서드가 굉장히 자주 호출됨.
-	- 그러나 메서드가 길어서 디폴트 옵션으로는 method inlining 최적화의 혜택을 받지 못함
-	- 그래서 메서드를 쪼개는 PR
-
-![](assets/spring-camp-keynote-567a1.png)
-
----
-
-## 느낀 점
-- Java collection framework 활용, 최적화 기법
-- Juergen Hoeller님은 Pull Request 를 잘 안 받아줌.
-	- 유사한 사례 https://github.com/spring-projects/spring-framework/pull/652/files
-
----
-
-## 댓글
-기억나는 댓글들
-
----
-
-### 1. List vs ArrayList 논쟁
-- https://okky.kr/article/262881
-- ArrayList를 List 인터페이스로 참조하는 스타일에 대한 댓글 배틀
-
---
-
-> A님:
->
-> List xxx = new ArrayList 로 사용하는 개발자가 전 생각없이 보이던데
-
---
-
-> B님:
->
-> ArrayList 가 최적인 경우에도 List xxx = new ArrayList 를 고집해야 하나요?
-
-
---
-
-> benelog(정상혁):
->
-> LinkedList를 ArrayList로 교체한 사례는 Spring프레임워크 2.0.1 -> 2.0.2로 넘어갈때의 아래 클래스의 사례가 생각나네요.
-
----
-
-### 2. '토스3 읽으신 분들 소감이 궁금합니다.'
-
-https://groups.google.com/forum/#!msg/ksug/sjc2QX2V9C8/ZJ54aFbanR0J
-
-
-![](assets/spring-camp-keynote-0103d.png)
-
----
-
-![](assets/spring-camp-keynote-30b6a.png)
-
---
-
-![](assets/spring-camp-keynote-36635.png)
-
----
-
-### 3. 지정된 JSON 속성만 반환하는 API 응답 만들기
-http://stackoverflow.com/questions/26014943/serialize-only-mentioned-fields-in-spring-mvc-to-json-response/36488056#36488056
-
-
-외국 아저씨한테 칭찬받으니 기분 좋음
-
-![](assets/spring-camp-keynote-d048d.png)
-
----
-
-### 느낀점
-- 온라인으로 알게되는 사람도 생각보다 가까이 있다.
-- 만날 일 없는 외국 개발자도 생각보다 우리와 비슷하다.
-
----
-
-## 코드 기여
-
-한국의 Spring 프로젝트 기여자 사례
-
----
-
-### 1. 백기선 님
-- 현 MS, 구 [네이버](http://recruit.navercorp.com/naver/job/list/developer) 소속 개발자
-- [Spring-Test-MVC 프로젝트 소개](http://d2.naver.com/helloworld/1341)
-	- [StatusResultMatchers](https://github.com/spring-projects/spring-framework/blob/master/spring-test/src/main/java/org/springframework/test/web/servlet/result/StatusResultMatchers.java#L33)
-	- Spring Test MVC에 프로젝트에 기여.
-	- Spring framework 3.2에 정식 포함됨
-
----
-
-![](assets/spring-camp-keynote-03308.png)
-
----
-
-### 2. 임정묵 님
-- 현 [네이버](http://recruit.navercorp.com/naver/job/list/developer) 소속 개발자
-- spring-boot에 204개의 commit
-	- Commit수로는 5위권의 기여자. Pivotal 직원이 아닌 사람 중에서는 1위
-	- https://github.com/spring-projects/spring-boot/graphs/contributors
-
-![](assets/spring-camp-keynote-f7fc7.png)
-
----
-
-- [spring-framework에서도 환영받으심](https://github.com/spring-projects/spring-framework/pull/1030#issuecomment-208724922)
-
-![](assets/spring-camp-keynote-f336f.png)
-
----
-
-### 3. 발표자의 기여 시도
-주로 회사 일과 연관되어서 발견한 이슈들
-
-- [Spring Batch에서 retry-limit이 지정되면 commit-interval 설정이 먹히지 않음.](https://jira.spring.io/browse/BATCH-2096)
-	- [5줄 추가하는 PR 날림](https://github.com/spring-projects/spring-batch/pull/227)
-	- merged
-
----
-
-- [Spring Batch 내부에 Enum에 명시되지 않은 DB를 JobRepository 로 쓸 수 없음](https://jira.spring.io/browse/BATCH-2175)
-	- [이를 우회하는 PR 날림](https://github.com/spring-projects/spring-batch/pull/277)
-	- PR는 반영되지 않음. 더 나은 방법으로 Spring Batch의 리더 Michael Minella가 해결해 줌
-	- 3.0에 반영되었으나 친절하게 2.2.x에도 Backport patch해 주심.
-
----
-
-- [Spring JDBC에 SimpleJdbcUpdate 추가](https://jira.spring.io/browse/SPR-4691)
-	- 업데이트 SQL 구문을 자동 생성하는 클래스
-	- Florent Paillard라는 분이 별도의 프로젝트로 만들었었으나 Spring framework쪽으로 옮길 의지가 부족해 보임
-	- [Spring 4.2에 돌아가도록 Florent Paillard에게 먼저 PR](https://github.com/florentp/spring-simplejdbcupdate/pull/3), merged
-	- Florent의 코드를 정리하여  [spring-framework쪽에 PR](https://github.com/spring-projects/spring-framework/pull/1075)
-	- 오랜 시간이 지났으나 별반응이 없음. 기존 코드에 SimpleJdbcInsert에서 의존하는 코드를 너무 많이 건드려서 merge되기는 어려울듯.
-
-![](assets/spring-camp-keynote-262d3.png)
-
----
-
-### 기여에 관심이 있다면?
-- 각 프로젝트의 [CONTRIBUTING.md](https://github.com/spring-projects/spring-framework/blob/master/CONTRIBUTING.md) 참조
-	- spring-framework의 경우는 JIRA에 이슈 먼저 등록
-	- Contributor License Agreement (CLA) 에 서명
-
---
-
-- 기여 대상으로 분류된 이슈부터 보기
-	- Spring Boot에서 [ideal-for-contribution](https://github.com/spring-projects/spring-boot/issues?q=is%3Aopen+is%3Aissue+label%3A%22status%3A+ideal-for-contribution%22) 라벨이 붙은 이슈
-	- Spring framework에서 [Contributions Welcome](https://jira.spring.io/browse/SPR/fixforversion/13915/?selectedTab=com.atlassian.jira.plugins.jira-development-integration-plugin:release-report-tabpanel) 으로 버전이 붙은 이슈
-
---
-
-- spring-framework보다 포트폴리오 프로젝트 쪽이 잘 받아준다.
-	- spring-boot 가 가장 활발해 보임
-	- spring-framework에 정식 포함되기 전에는 더 잘 받아줌
-- Juergen Hoeller님보단 Stéphane Nicoll 님이 잘 받아준다
-
----
-
-#### 별도의 프로젝트로 시작되어 공식 프로젝트에 포함된 사례
-- Spring 3.0 전의 Java Config도 별도의 프로젝트
-- [spring-projects/spring-test-mvc](https://github.com/spring-projects/spring-test-mvc) (현재는 삭제됨) -> spring-framework (spring-test) 3.2에 통합
-- [spring-projects/spring-web-reactive](https://github.com/spring-projects/spring-web-reactive) (현재는 삭제됨 ) -> spring-framework (spring-webflux) 5.0에 통합
-- [spring-projects/spring-test-htmlunit](https://github.com/spring-projects/spring-test-htmlunit) -> spring-framework (spring-test) 4.2에 통합
-- [dsyer/spring-boot-mustache](https://github.com/dsyer/spring-boot-mustache) (Dave Syer의 개인 계정) -> spring-boot (spring-boot-starter-mustache) 1.2.2에 통합
-- [bclozel/spring-boot-web-reactive](https://github.com/bclozel/spring-boot-web-reactive) (Brian Clozel의 개인 계정 ) -> spring-boot ( spring-boot-starter-webflux ) 2.0에 통합
-- [sbrannen/spring-composed](https://github.com/sbrannen/spring-composed) (Sam Brannen의 개인계정) : spring-framework 4.3에 같은 역할을 하는 클래스가 반영
-
---
-
-성공 확률이 높은 코드 기여는?
-
-- Spring Boot에서 `ideal-for-contribution` 라벨이 붙어 있고 Stéphane Nicoll님이 댓글을 단 이슈
-- 실험적인 프로젝트에 하는 기여
-	- Pivotal 주요 개발자들의 개인 계정에 있는 경우도
-
----
-
-## 돌아보니
-- 코드 구경 -> 댓글 -> 기여 시도
-- Spring/KSUG가
-	- 더 적극적인 행동/넓은 사람들에 다가가는 디딤돌
+# The Colourful `aha` Help Message
+
+The output of `aha -h` give a good example of the results of this method:
+
+.small[
+```terminal
+josh@brick ~/repos/aha $ aha -h
+<span style="color:red;font-weight:bold;">Ansi Html Adapter</span> Version 0.4.6.1
+<span style="font-weight:bold;">aha</span> takes SGR-colored Input and prints W3C conform HTML-Code
+use: <span style="font-weight:bold;">aha</span> &lt;<span style="text-decoration:underline;">options</span>&gt; [<span style="text-decoration:underline;">-f file</span>]
+     <span style="font-weight:bold;">aha</span> (<span style="text-decoration:underline;">--help</span>|<span style="text-decoration:underline;">-h</span>|<span style="text-decoration:underline;">-?</span>)
+<span style="font-weight:bold;">aha</span> reads the Input from a file or stdin and writes HTML-Code to stdout
+<span style="text-decoration:underline;">options</span>: --black,     -b: <span style="color:black;font-weight:bold;"></span><span style="color:black;background-color:white;font-weight:bold;">Black</span> Background and <span style="color:white;font-weight:bold;">White</span> &quot;standard color&quot;
+         --pink,      -p: <span style="color:fuchsia;font-weight:bold;">Pink</span> Background
+         --iso X,   -i X: Uses ISO 8859-X instead of utf-8. X must be 1..16
+         --title X, -t X: Gives the html output the title &quot;X&quot; instead of &quot;stdin&quot;
+                          or the filename
+         --line-fix,  -l: Uses a fix for inputs using control sequences to
+                          change the cursor position like htop. It's a hot fix,
+                          it may not work with any program like htop. Example:
+                          <span style="font-weight:bold;">echo</span> q | <span style="font-weight:bold;">htop</span> | <span style="font-weight:bold;">aha</span> -l &gt; htop.htm
+         --word-wrap, -w: Wrap long lines in the html file. This works with
+                          CSS3 supporting browsers as well as many older ones.
+         --no-header, -n: Don't include header into generated HTML,
+                          useful for inclusion in full HTML files.
+Example: <span style="font-weight:bold;">aha</span> --help | <span style="font-weight:bold;">aha</span> --black &gt; aha-help.htm
+         Writes this help text to the file aha-help.htm
+
+Copyleft <span style="color:lime;font-weight:bold;">Alexander Matthes</span> aka <span style="text-decoration:underline;">Ziz</span> 2012
+         <span style="color:aqua;text-decoration:blink;">zizsdl@googlemail.com</span>
+         <span style="color:aqua;text-decoration:blink;">http://ziz.delphigl.com/tool_aha.php</span>
+This application is subject to the <span style="color:#3333FF;font-weight:bold;">MPL</span> or <span style="color:#3333FF;font-weight:bold;">LGPL</span>.
+```
+]
