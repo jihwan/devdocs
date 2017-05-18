@@ -1,5 +1,7 @@
 <!--class: center, middle, inverse-->
 
+# Who am I !
+
 ```java
 public class ResearchAndDevelopment {
     public static class 연구그룹 {
@@ -15,7 +17,7 @@ public class ResearchAndDevelopment {
 
 ---
 
-# AIM system 입사를 축하드리며
+# 입사를 축하드리며
 
 # 여기까지 오시느라 수고 많으셨습니다.
 
