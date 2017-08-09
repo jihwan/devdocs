@@ -9,6 +9,12 @@ tags: [DDD]
 
 # Aggregate
 
+- 관계
+  - 객체간 관계 설정 : 다중성, 방향성
+  - 테이블간 관계 설정 : @JoinColumn @JoinColumns @JoinTable @ElementCollection @CollectionTable
+- 생성 : 팩토리 메소드 패턴 on 애그리거트
+- 상태변경 : 업무 규칙을 구현한 기능을 제공하고, 일관성 관리 기준이다.
+
 ## 애그리거트
 
 `상위 수준에서 모델 간의 관계를 이해`
@@ -96,7 +102,7 @@ M:N 연관관계의 경우, 양방향 연관관계는 드물고, 단방향 M:N �
 아래 코드는 Category 와 Product M:N 관계를, Product에서 Category로 향하는, 단방향 1:N 관계로 만든 예
 
 ```java
-class Product {  
+class Product {
   @ElementCollection
   @CollectionTable(name = "product_category",
     joinColumns = @JoinColumn(name = "product_id"))
