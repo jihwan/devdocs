@@ -23,3 +23,12 @@ staging area??
 근본적으로, commit하는 시점과 횟수가 다르다.
 git에서는 단위작업이 끝나면 commit!
 
+## .gitignore file
+
+```bash
+# 
+/TODO
+
+# 어디든 있는 build directory 무시
+build/
+```
