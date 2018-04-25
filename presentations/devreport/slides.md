@@ -1,6 +1,10 @@
 class: center, middle, inverse
 
+# SPC / RMS 개발 계획
 
+.footnote[
+  2018. 04. 25. 반도체솔루션그룹 황지환
+]
 
 ---
 
