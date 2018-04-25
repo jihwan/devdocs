@@ -1,6 +1,6 @@
 class: center, middle, inverse
 
-# SK 서산 1공장 Overvie
+# SK 서산 1공장 Overview
 전극, 조립, 화성 3대 공정으로 나뉘어 있고,
 각 공정내 data source에 따라, 수집하는 데이터(lot, machine, product)가 다릅니다.
 화성 공정은 SPC 보다는 Report성격이 강합니다.
