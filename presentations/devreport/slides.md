@@ -62,7 +62,7 @@ class: center, middle, inverse
 ---
 
 # 6. 이슈
-  1. 서산의 경험으로, 웹개발 프로젝트 수행시 개발생산성 저하가 있습니다.
+  1. 웹 개발생산성이 낮습니다.
   2. client platform 결정이 어렵습니다.
 
 # 7. RMS 계획
