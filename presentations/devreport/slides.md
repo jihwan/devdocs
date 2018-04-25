@@ -1,34 +1,27 @@
 class: center, middle, inverse
 
 # SK 서산 1공장 Overvie
-```terminal
 전극, 조립, 화성 3대 공정으로 나뉘어 있고,
 각 공정내 data source에 따라, 수집하는 데이터(lot, machine, product)가 다릅니다.
 화성 공정은 SPC 보다는 Report성격이 강합니다.
 결과적으로 3대 공정을 다른 fab으로 인식 하여도 무방할 정도 입니다.
 1공장 일부 요구사항은 2공장 프로젝트로 연기 되었습니다.
-```
+
 
 ---
 
 # 1. database
-```terminal
   rSPC db schema를 base로 하였습니다만,
   자주 변하는 요구사항을 설계 없이 그때 그때 마다 반영하다 보니,
   table간 관계가 없고, table내 특정 field 값을 이용하여 로직을 구성하였습니다.
   분석이 난해 합니다.
-```
 
 # 2. sever
-```terminal
   모듈화 및 용도별 서버 구성이 되어있지 않아, 복잡도가 높고 의존성이 높습니다.
-```
 
 # 3. web ui
-```sh
   database 와 server 쪽에서 데이터 관리가 안되다 보니, 그 처리를 화면에서 수행하고 있습니다.
   여러개의 기능을 한 화면에서 처리 하여 side effect가 높고, 유지 보수성이 떨어집니다.
-```
 
 ---
 
