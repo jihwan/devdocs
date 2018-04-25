@@ -1,18 +1,21 @@
-<!--class: center, middle, inverse-->
+class: center, middle, inverse
 
 # 1. SK 서산 1공장 Overview
 
-```sh
+.small[
+```terminal
 전극, 조립, 화성 3대 공정으로 나뉘어 있고,
 각 공정내 data source에 따라, 수집하는 데이터(lot, machine, product)가 다릅니다.
 화성 공정은 SPC 보다는 Report성격이 강합니다.
 결과적으로 3대 공정을 다른 fab으로 인식 하여도 무방할 정도 입니다.
 1공장 일부 요구사항은 2공장 프로젝트로 연기 되었습니다.
 ```
+]
 
+---
 ## 1. database
 
-```sh
+```terminal
   rSPC db schema를 base로 하였습니다만,
   자주 변하는 요구사항을 설계 없이 그때 그때 마다 반영하다 보니,
   table간 관계가 없고, table내 특정 field 값을 이용하여 로직을 구성하였습니다.
@@ -21,7 +24,7 @@
 
 ## 2. sever
 
-```sh
+```terminal
   모듈화 및 용도별 서버 구성이 되어있지 않아, 복잡도가 높고 의존성이 높습니다.
 ```
 
@@ -63,6 +66,8 @@
   1. JDK8, spring boot 2.X 기반
   2. oracle GTT, IOT 고려
   3. tibrv 사용 하지 않을 경우 server LB,HA 확보 방안은??
+
+--- 
 
 ## 6. 이슈
 
