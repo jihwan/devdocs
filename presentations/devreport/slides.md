@@ -2,7 +2,6 @@ class: center, middle, inverse
 
 # 1. SK 서산 1공장 Overview
 
-.small[
 ```terminal
 전극, 조립, 화성 3대 공정으로 나뉘어 있고,
 각 공정내 data source에 따라, 수집하는 데이터(lot, machine, product)가 다릅니다.
@@ -10,7 +9,6 @@ class: center, middle, inverse
 결과적으로 3대 공정을 다른 fab으로 인식 하여도 무방할 정도 입니다.
 1공장 일부 요구사항은 2공장 프로젝트로 연기 되었습니다.
 ```
-]
 
 ---
 
@@ -81,5 +79,3 @@ class: center, middle, inverse
 2. db schema, RMS 시나리오 분석 업무
 
 위 항목건 수행.
-
----
