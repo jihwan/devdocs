@@ -10,16 +10,16 @@ class: center, middle, inverse
 
 ---
 
-# 1. database
+## 1. database
   rSPC db schema를 base로 하였습니다만,
   자주 변하는 요구사항을 설계 없이 그때 그때 마다 반영하다 보니,
   table간 관계가 없고, table내 특정 field 값을 이용하여 로직을 구성하였습니다.
   분석이 난해 합니다.
 
-# 2. sever
+## 2. sever
   모듈화 및 용도별 서버 구성이 되어있지 않아, 복잡도가 높고 의존성이 높습니다.
 
-# 3. web ui
+## 3. web ui
   database 와 server 쪽에서 데이터 관리가 안되다 보니, 그 처리를 화면에서 수행하고 있습니다.
   여러개의 기능을 한 화면에서 처리 하여 side effect가 높고, 유지 보수성이 떨어집니다.
 
